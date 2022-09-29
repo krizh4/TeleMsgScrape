@@ -2,11 +2,11 @@ const { Telegraf } = require('telegraf');
 const mongoose = require('mongoose');
 
 //DATABASE MODEL
-mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 let Post;
 const Schema = mongoose.Schema;
 const postSchema = new Schema({
-  text: String;
+  text: String
 });
 Post = mongoose.model('Post', postSchema)
 
@@ -18,9 +18,15 @@ bot.hears('Hi', (ctx) => ctx.reply('Hey there'));
 // bot.command('oldschool', (ctx) => ctx.reply('Hello'));
 // bot.command('hipster', Telegraf.reply('λ'));
 
+//READING AND STOREING PROC
 bot.on('message', async (ctx) => {
-  ctx.reply(`I hear you say "${ctx.message.text}"`);
-  ctx.reply(`I hear you say "${ctx.message.caption}"`);
+  var post = new Post({
+    text: ctx.message.text
+  });
+  post.save((err, data) => {
+    if (err) return ctx.reply(`I HEARD U SAY "${ctx.message.text}", Can't Take notes`);
+    ctx.reply(`I TOOK A NOTE "${ctx.message.text}"`);
+  });
 });
 
 bot.launch();
