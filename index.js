@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const { Telegraf } = require('telegraf');
 const mongoose = require('mongoose');
 
