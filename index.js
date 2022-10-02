@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const { Telegraf } = require('telegraf');
 const mongoose = require('mongoose');
 
@@ -23,10 +25,14 @@ bot.on('message', async (ctx) => {
   var post = new Post({
     text: ctx.message.text
   });
-  post.save((err, data) => {
-    if (err) return ctx.reply(`I HEARD U SAY "${ctx.message.text}", Can't Take notes`);
-    ctx.reply(`I TOOK A NOTE "${ctx.message.text}"`);
-  });
+  if (process.env.USER_ID.includes(ctx.chat.id )){
+    post.save((err, data) => {
+      if (err) return ctx.reply(`I HEARD U SAY "${ctx.message.text}", Can't Take notes`);
+      ctx.reply(`I TOOK A NOTE "${ctx.message.text}"`);
+    });
+  } else {
+    ctx.reply('You dont have any power to use me hahaha XD');
+  }
 });
 
 bot.launch();
